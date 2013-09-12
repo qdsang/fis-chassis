@@ -169,7 +169,7 @@ some page is lost,do you want to install it?[N/Y]y
 page install success, please release it again;
 
 ... ...
-fis release
+fis-chassis release
 ```
 
 此时，即可预览到新增的`page`,而且，开发目录下已经自动生成了`page/view`目录及对应的脚手架模板，根据需要修改自己的业务逻辑即可。
