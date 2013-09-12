@@ -177,6 +177,30 @@ fis release
 fis release
 ```
 
+##新增标签介绍
+
+为了简化开发过程中手工操作，工具在FIS的基础上新增了几个标签
+
+###{{page.html}}
+
+试用范围：任意html/css/js文件
+
+工具在打包前会根据`fis-conf.js`设置的路由规则提取需要的`page`目录下的html文件内容替换掉当前标签。
+
+###{{page.css}}
+
+试用范围：任意html/css/js文件
+
+工具在打包前会根据`fis-conf.js`设置的路由规则提取需要的`page`目录下的css文件内容替换掉当前标签。
+
+###{{map.json}}
+
+试用范围：任意html/css/js文件
+
+
+
+###{{setting.router}}
+
 ##其它
 
 `fis-chassis`仅在`fis-conf.js`的`Chassis.router.routes`规则新增时对开发目录下的`page`目录做新增操作。如果你删除了某些规则，工具不会删除对应的目录，但这个目录就会变成孤立的目录，业务运行时不会被调用。
