@@ -53,18 +53,22 @@ fis-chassis install init --repos http://webappdemos.duapp.com/scaffold
 ```
 md webapp
 cd webapp
-fis release
+fis-chassis release
+
+... ...
+找不到fis-conf.js文件，当前项目不是chassis项目，需要安装chassis脚手架吗？
+[N/Y]? y
+
+选择脚手架名称：
+1. init(最简单的脚手架，适合创建自己的项目)
+2. demo(一个新闻app的完整示例)
+[请选择]: 2
 
 ... ...
 
-fis-conf.js is not found,do you want to install a new scaffold?[N/Y]y
-press scaffold name to continue,default is init,[init]init
+脚手架安装成功，请重新执行release命令;
 
-... ...
-
-scaffold install success, please release it again;
-
-fis release
+fis-chassis release
 
 ```
 
@@ -158,15 +162,14 @@ fis.config.merge({
 刚才新增的规则并没有建立对应的`page/view`目录，我们不需要手动建立它，使用`fis-chassis release`命令时会自动检测到这个新增的规则并处理它：
 
 ```
-fis release
+fis-chassis release
 
 ... ....
 
-some page is lost,do you want to install it?[N/Y]y
+配置文件新增了一些路由规则，对应的目录及文件没有创建，需要创建吗？
+[N/Y]? y
 
-... ...
-
-page install success, please release it again;
+目录及文件创建成功，请重新执行release命令!
 
 ... ...
 fis-chassis release
@@ -176,7 +179,7 @@ fis-chassis release
 ###预览
 
 ```
-fis release
+fis-chassis release
 ```
 
 ##新增标签介绍
