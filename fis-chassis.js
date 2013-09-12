@@ -3,13 +3,15 @@
  */
 
 var fis = module.exports = require('fis'),
-	fs  = require( 'fs' );
+	fs  = require( 'fs' ),
+	program = require('commander');
 
 fis.cli.name = "fis-chassis";
 fis.cli.info = fis.util.readJSON(__dirname + '/package.json');
 
 fis.config.merge({
     modules : {
+		
         postpackager : function( ret ){
 			var project         = process.cwd().replace( /\\/g, '/' ),
 				setting         = fis.config.get('chassis'),
@@ -20,26 +22,35 @@ fis.config.merge({
 
 			// 检查当前目录是否为空.如果为空就需要重新install
 			if ( !fis.util.isFile( project + '/fis-conf.js') ) {
-				process.stdout.write( ("fis-conf.js is not found,do you want to install a new scaffold?").bold.red + "[N/Y]" );
-				stdin = fs.readSync(process.stdin.fd, 1000, 0, "utf8");
 				
-				if ( stdin[ 0 ].trim().toLowerCase() !== 'y' ) {
-					process.exit( 1 );
-				}
-				
-				process.stdout.write( ("press scaffold name to continue,default is init").bold.red + "[init]" );
-				stdin = fs.readSync(process.stdin.fd, 1000, 0, "utf8");
-				
-				scaffold = stdin[ 0 ].trim().toLowerCase() === 'demo' ? 'demo' : 'init';
-				
-				fis.util.install( scaffold, '*', {
-					extract : project,
-					remote  : 'http://webappdemos.duapp.com/scaffold',
-					before  : function(name, version){},
-					done    : function() {
-						process.stdout.write( ("\nscaffold install successly, please release it again;\n").bold.green );
-					}
-				} );
+				// 使用setTimeout让fis的时间输入提前输出，防止对命令行的干扰
+				setTimeout(function(){
+					process.stdout.write( ("\n找不到fis-conf.js文件，当前项目不是chassis项目，需要安装chassis脚手架吗？\n").bold.red );
+					
+					program.confirm('[N/Y]? ', function(ok){
+						if ( !ok ) {
+							process.exit( 1 );
+							process.stdin.destroy();
+							return;
+						}
+						
+						process.stdout.write( ("\n选择脚手架名称：\n").bold.red + "1. init(最简单的脚手架，适合创建自己的项目)\n2. demo(一个新闻app的完整示例)\n" );
+						
+						program.prompt('[请选择]: ', function(desc){
+							scaffold = desc.trim().toLowerCase() === '1' ? 'init' : 'demo';
+							
+							fis.util.install( scaffold, '*', {
+								extract : project,
+								remote  : 'http://webappdemos.duapp.com/scaffold',
+								before  : function(name, version){},
+								done    : function() {
+									process.stdout.write( ("\n脚手架安装成功，请重新执行release命令;\n").bold.green );
+									process.stdin.destroy();
+								}
+							} );
+						});
+					});
+				},300);
 				return false;
 			}
 			
@@ -56,81 +67,93 @@ fis.config.merge({
 			
 
 			if ( install_page.length ) {
-			
-				process.stdout.write( ("some page is lost,do you want to install it?").bold.red + "[N/Y]" );
 				
-				stdin = fs.readSync(process.stdin.fd, 1000, 0, "utf8");
+				// 使用setTimeout让fis的时间输入提前输出，防止对命令行的干扰
+				setTimeout(function(){
 				
-				if ( stdin[ 0 ].trim().toLowerCase() !== 'y' ) {
-					process.exit( 1 );
-				}
-				
-				
-				// 建立目标目录
-				var copyTmp = function( path, pages ){
-					pages.forEach( function( item ) {
-						fis.util.mkdir( project + '/page/' + item );
-					} );
+					process.stdout.write( ("\n配置文件新增了一些路由规则，对应的目录及文件没有创建，需要创建吗？\n").bold.red );
 					
-					walk( path, pages );
-				};
-				
-				var walk = function( path, pages ){
-					var dirList = fs.readdirSync( path );
-
-					dirList.forEach( function( item ) {
-						var dir = path + '/' + item;
-						if ( fis.util.isDir( dir ) ) {
-							pages.forEach( function( p ) {
-								var _path = dir.replace( '.chassis-tmp', '/page/' + p ).replace( /\{pagename\}/g, p );
-								fis.util.mkdir( _path );
-							} );
-							walk( dir, pages );
-						} else {
-							pages.forEach( function( p ) {
-								var _path = dir.replace( '.chassis-tmp', '/page/' + p ).replace( /\{pagename\}/g, p );
-								fis.util.copy( dir,  _path);
-								var content = fis.util.read( dir ).replace( /\{pagename\}/g, p );
-								fis.util.write( _path, content );
-							} );
+					program.confirm('[N/Y]? ', function(ok){
+						if ( !ok ) {
+							process.exit( 1 );
+							process.stdin.destroy();
+							return;
 						}
-					} );
-				};
-				
-				var removeDir = function( path ){
-					var files = [];
-					if( fs.existsSync( path ) ) {
-						files = fs.readdirSync( path );
-						files.forEach( function( file, index ) {
-							var curPath = path + "/" + file;
-
-							if( fis.util.isDir( curPath ) ) {
-								removeDir( curPath );
-							} else {
-								fs.unlinkSync( curPath );
+						
+						// 执行安装
+						var tmpDir = project + '/.chassis-tmp';
+						fis.util.mkdir( tmpDir );
+						fis.util.install( 'pagetpl', '*', {
+							extract : tmpDir,
+							remote  : 'http://webappdemos.duapp.com/scaffold',
+							before  : function(name, version){},
+							done    : function() {
+								copyTmp( tmpDir, install_page );
+								removeDir( tmpDir );
+								process.stdout.write( ("\n目录及文件创建成功，请重新执行release命令!\n").bold.green );
+								
+								process.stdin.destroy();
 							}
-
 						} );
+					
+					});
+					
+					
+					
+					
+					// 建立目标目录
+					var copyTmp = function( path, pages ){
+						pages.forEach( function( item ) {
+							fis.util.mkdir( project + '/page/' + item );
+						} );
+						
+						walk( path, pages );
+					};
+					
+					var walk = function( path, pages ){
+						var dirList = fs.readdirSync( path );
 
-						fs.rmdirSync( path );
-					}
-				};
+						dirList.forEach( function( item ) {
+							var dir = path + '/' + item;
+							if ( fis.util.isDir( dir ) ) {
+								pages.forEach( function( p ) {
+									var _path = dir.replace( '.chassis-tmp', '/page/' + p ).replace( /\{pagename\}/g, p );
+									fis.util.mkdir( _path );
+								} );
+								walk( dir, pages );
+							} else {
+								pages.forEach( function( p ) {
+									var _path = dir.replace( '.chassis-tmp', '/page/' + p ).replace( /\{pagename\}/g, p );
+									fis.util.copy( dir,  _path);
+									var content = fis.util.read( dir ).replace( /\{pagename\}/g, p );
+									fis.util.write( _path, content );
+								} );
+							}
+						} );
+					};
+					
+					var removeDir = function( path ){
+						var files = [];
+						if( fs.existsSync( path ) ) {
+							files = fs.readdirSync( path );
+							files.forEach( function( file, index ) {
+								var curPath = path + "/" + file;
+
+								if( fis.util.isDir( curPath ) ) {
+									removeDir( curPath );
+								} else {
+									fs.unlinkSync( curPath );
+								}
+
+							} );
+
+							fs.rmdirSync( path );
+						}
+					};
 				
-				// 执行安装
-				var tmpDir = project + '/.chassis-tmp';
-				fis.util.mkdir( tmpDir );
-				fis.util.install( 'pagetpl', '*', {
-					extract : tmpDir,
-					remote  : 'http://webappdemos.duapp.com/scaffold',
-					before  : function(name, version){},
-					done    : function() {
-						copyTmp( tmpDir, install_page );
-						removeDir( tmpDir );
-						process.stdout.write( ("\npage install success, please release it again;\n").bold.green );
-					}
-				} );
 				
-				return;
+				}, 300);
+				return false;
 				
 			}
 			
@@ -161,7 +184,7 @@ fis.config.merge({
 					 .replace( /\{\{setting\.router\}\}/g, JSON.stringify( setting.router ) );
 				
 				f.setContent( c );
-			} )
+			} );
 			
 			
 			return true;
