@@ -71,8 +71,8 @@ fis release
 ###目录结构介绍
 ```
 .
-│  fis-conf.js
-│  index.html
+│  fis-conf.js  //fis配置文件
+│  index.html  //项目首页，可以自己指定其它名称
 │  
 ├─css
 │   all.css
@@ -81,11 +81,10 @@ fis release
 │   pageloading.css
 │   reset.css
 │      
-├─data    
+├─data    //模拟数据目录
 ├─img  
 ├─js
-│  │  app.data.js
-│  │  chassis.config.js
+│  │  chassis.config.js //[todo]待优化掉
 │  │  init.js
 │  │  pageview._TRANSITION_.js
 │  │  
@@ -96,21 +95,6 @@ fis release
 │      └─gmu
 │                      
 ├─page
-│  ├─aab
-│  │  ├─css
-│  │  │  aab.css
-│  │  │      
-│  │  ├─html
-│  │  │   aab.html
-│  │  │      
-│  │  ├─js
-│  │  │  └─view
-│  │  │     pageview.aab.js
-│  │  │     subview.aab_content.js
-│  │  │          
-│  │  └─tpl
-│  │      aab.tpl
-│  │          
 │  ├─detail
 │  │  ├─css
 │  │  │   detail.css
