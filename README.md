@@ -213,5 +213,5 @@ fis release
 
 ##其它
 
-`fis-chassis`仅在`fis-conf.js`的`Chassis.router.routes`规则新增时对开发目录下的`page`目录做新增操作。如果你删除了某些规则，工具不会删除对应的目录，但这个目录就会变成孤立的目录，业务运行时不会被调用。
+`fis-chassis`仅在`fis-conf.js`的`Chassis.router.routes`规则新增时对开发目录下的`page`目录做新增操作。如果你删除了某些规则，工具不会删除对应的目录，但这个目录会变成孤立的目录，业务运行时不会被调用。
 
