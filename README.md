@@ -197,7 +197,7 @@ fis release
 
 试用范围：任意html/css/js文件
 
-
+工具在打包前会将`map.json`文件的内容替换当前标签。
 
 ###{{setting.router}}
 
