@@ -178,7 +178,7 @@ fis-chassis release
 
 此时，即可预览到新增的`page`,而且，开发目录下已经自动生成了`page/view`目录及对应的脚手架模板，根据需要修改自己的业务逻辑即可。
 
-###预览
+###发布预览
 
 ```
 fis-chassis release
