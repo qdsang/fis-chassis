@@ -133,7 +133,7 @@ fis-chassis release
 
 只需要编辑配置文件`fis-conf.js`，在`Chassis.router.routes`下新增一条规则即可，如下：
 
-```
+```javascript
 fis.config.merge({
     chassis : {
 		home   : 'index.html',
