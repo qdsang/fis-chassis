@@ -40,7 +40,7 @@ fis-chassis release
 
 ###初始化脚手架
 
-如示例安装一样，你不需要从**0**开始创建一个webapp，工具已经提供了一个脚手架帮你做好了准备工作。
+如示例安装一样，你不需要从零开始创建一个webapp，工具已经提供了脚手架帮你做好了准备工作。
 
 使用`fis-chassis install`命令安装脚手架：
 
@@ -48,7 +48,7 @@ fis-chassis release
 fis-chassis install init --repos http://webappdemos.duapp.com/scaffold
 ```
 
-如果某个目录为空，使用`fis-chassis release`命令时也可以自动下载脚手架：
+如果目标目录为空，使用`fis-chassis release`命令时也可以自动下载脚手架：
 
 ```
 md webapp
@@ -125,13 +125,13 @@ fis-chassis release
   
 ###新增Page
 
-假如我们要新增一个Page，对应的路由规则是：
+假如我们要新增一个名为`view`的Page，对应的路由规则是：
 
 ```
 { "view" : "view" }
 ```
 
-编辑配置文件`fis-conf.js`，在`Chassis.router.routes`下新增一条规则即可，如下：
+只需要编辑配置文件`fis-conf.js`，在`Chassis.router.routes`下新增一条规则即可，如下：
 
 ```
 fis.config.merge({
@@ -177,6 +177,7 @@ fis-chassis release
 ```
 
 此时，即可预览到新增的`page`,而且，开发目录下已经自动生成了`page/view`目录及对应的脚手架模板，根据需要修改自己的业务逻辑即可。
+
 ###预览
 
 ```
