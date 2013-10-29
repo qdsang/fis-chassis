@@ -194,6 +194,12 @@ fis-chassis release
 
 工具在打包前会根据`fis-conf.js`设置的路由规则提取需要的`page`目录下的html文件内容替换掉当前标签。
 
+###{{page.tpl}}
+
+试用范围：任意html/css/js文件
+
+工具在打包前会根据`fis-conf.js`设置的路由规则提取需要的`page`目录下的tpl文件内容替换掉当前标签。
+
 ###{{page.css}}
 
 试用范围：任意html/css/js文件
